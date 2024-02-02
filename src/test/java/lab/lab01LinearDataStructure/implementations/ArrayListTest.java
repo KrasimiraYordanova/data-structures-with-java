@@ -1,4 +1,4 @@
-package implementations;
+package lab.lab01LinearDataStructure.implementations;
 
 import org.junit.Test;
 

@@ -1,6 +1,6 @@
-package benchmark;
+package lab.lab01LinearDataStructure.benchmark;
 
-import implementations.ArrayList;
+import lab.lab01LinearDataStructure.implementations.ArrayList;
 import implementations.Queue;
 import implementations.SinglyLinkedList;
 import implementations.Stack;
