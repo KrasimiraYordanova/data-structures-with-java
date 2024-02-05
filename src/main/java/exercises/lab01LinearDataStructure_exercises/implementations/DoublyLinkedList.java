@@ -1,4 +1,4 @@
-package implementations;
+package exercises.lab01LinearDataStructure_exercises.implementations;
 
 import interfaces.LinkedList;
 
@@ -6,11 +6,13 @@ import java.util.Iterator;
 
 public class DoublyLinkedList<E> implements LinkedList<E> {
     private Node<E> head;
+    private Node<E> tail;
     private int size;
 
     private static class Node<E> {
         private E element;
         private Node<E> next;
+        private Node<E> previous;
 
         public Node(E value) {
             this.element = value;
@@ -23,26 +25,27 @@ public class DoublyLinkedList<E> implements LinkedList<E> {
     @Override
     public void addFirst(E element) {
         Node<E> newNode = new Node<>(element);
-        if (this.head != null) {
+        if (this.head == null) {
+            this.head = this.tail = newNode;
+        } else {
             newNode.next = this.head;
+            this.head.previous = newNode;
+            this.head = newNode;
         }
-        this.head = newNode;
         this.size++;
     }
 
     @Override
     public void addLast(E element) {
         Node<E> newNode = new Node<>(element);
-        if (this.head == null) {
-            this.head = newNode;
+        if (this.size == 0) {
+            this.head = this.tail = newNode;
         } else {
-            Node<E> current = this.head;
-            while (current.next != null) {
-                current = current.next;
-            }
-            current.next = newNode;
+            newNode.previous = this.tail;
+            this.tail.next = newNode;
+            this.tail = newNode;
+            this.size++;
         }
-        this.size++;
     }
 
     @Override
@@ -50,9 +53,10 @@ public class DoublyLinkedList<E> implements LinkedList<E> {
         ensureNotEmpty();
         E element = this.head.element;
         if (this.size == 1) {
-            this.head = null;
+            this.head = this.tail = null;
         } else {
             Node<E> newHead = this.head.next;
+            newHead.previous = null;
             this.head.next = null;
             this.head = newHead;
         }
@@ -73,16 +77,14 @@ public class DoublyLinkedList<E> implements LinkedList<E> {
             return removeFirst();
         }
 
-        Node<E> current = this.head;
-        Node<E> prev = this.head;
-        while (current.next != null) {
-            prev = current;
-            current = current.next;
-        }
-        E element =  current.element;
-        prev.next = null;
-        this.size--;
+        E element =  this.tail.element;
 
+        Node<E> currentTail = this.tail; // saving the current last element
+        this.tail = this.tail.previous; // the last element = to the previous
+        this.tail.next = null;
+        currentTail.previous = null; // the last node previous element = to null
+
+        this.size--;
         return element;
     }
 
@@ -94,11 +96,8 @@ public class DoublyLinkedList<E> implements LinkedList<E> {
 
     @Override
     public E getLast() {
-        Node<E> current = this.head;
-        while (current.next != null) {
-            current = current.next;
-        }
-        return current.element;
+        ensureNotEmpty();
+        return this.tail.element;
     }
 
     @Override
